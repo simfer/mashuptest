@@ -19,7 +19,7 @@ public class MashupServlet {
   Logger logger = LoggerFactory.getLogger(MashupServlet.class);
 
 	private static final String DESTINATION_NAME = "APIHubBP"; //Refers to the destination created in Step 6
-	private static final String apikey = "t7M7w7MHlLvAOhDrNAzcRnCaw1YiLfOo"; //Replace with your API key
+	private static final String apikey = "XXXXXXXXXXXXXXXXX"; //Replace with your API key
 
 
 	private ErpConfigContext context = new ErpConfigContext(DESTINATION_NAME);
