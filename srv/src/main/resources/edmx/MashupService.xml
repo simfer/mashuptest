@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="MashupService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Authors" EntityType="MashupService.Authors"/>
+        <EntitySet Name="Books" EntityType="MashupService.Books"/>
+        <EntitySet Name="Orders" EntityType="MashupService.Orders"/>
+        <EntitySet Name="Suppliers" EntityType="MashupService.Suppliers"/>
+        <AssociationSet Name="Books_author" Association="MashupService.Books_author">
+          <End Role="Books" EntitySet="Books"/>
+          <End Role="Authors" EntitySet="Authors"/>
+        </AssociationSet>
+        <AssociationSet Name="Orders_book" Association="MashupService.Orders_book">
+          <End Role="Orders" EntitySet="Orders"/>
+          <End Role="Books" EntitySet="Books"/>
+        </AssociationSet>
+        <AssociationSet Name="Orders_supplier" Association="MashupService.Orders_supplier">
+          <End Role="Orders" EntitySet="Orders"/>
+          <End Role="Suppliers" EntitySet="Suppliers"/>
+        </AssociationSet>
+      </EntityContainer>
+      <EntityType Name="Authors">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="name" Type="Edm.String"/>
+        <NavigationProperty Name="books" Relationship="MashupService.Books_author" FromRole="Authors" ToRole="Books"/>
+      </EntityType>
+      <EntityType Name="Books">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="title" Type="Edm.String"/>
+        <NavigationProperty Name="author" Relationship="MashupService.Books_author" FromRole="Books" ToRole="Authors"/>
+        <Property Name="stock" Type="Edm.Int32"/>
+        <Property Name="author_ID" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="Orders">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="book" Relationship="MashupService.Orders_book" FromRole="Orders" ToRole="Books"/>
+        <Property Name="buyer" Type="Edm.String"/>
+        <Property Name="date" Type="Edm.DateTimeOffset"/>
+        <Property Name="amount" Type="Edm.Int32"/>
+        <NavigationProperty Name="supplier" Relationship="MashupService.Orders_supplier" FromRole="Orders" ToRole="Suppliers"/>
+        <Property Name="book_ID" Type="Edm.Int32"/>
+        <Property Name="supplier_ID" Type="Edm.String" MaxLength="10"/>
+      </EntityType>
+      <EntityType Name="Suppliers">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Name" Type="Edm.String" MaxLength="80"/>
+      </EntityType>
+      <Association Name="Books_author">
+        <End Role="Books" Type="MashupService.Books" Multiplicity="*"/>
+        <End Role="Authors" Type="MashupService.Authors" Multiplicity="0..1"/>
+        <ReferentialConstraint>
+          <Principal Role="Authors">
+            <PropertyRef Name="ID"/>
+          </Principal>
+          <Dependent Role="Books">
+            <PropertyRef Name="author_ID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Orders_book">
+        <End Role="Orders" Type="MashupService.Orders" Multiplicity="*"/>
+        <End Role="Books" Type="MashupService.Books" Multiplicity="0..1"/>
+        <ReferentialConstraint>
+          <Principal Role="Books">
+            <PropertyRef Name="ID"/>
+          </Principal>
+          <Dependent Role="Orders">
+            <PropertyRef Name="book_ID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Orders_supplier">
+        <End Role="Orders" Type="MashupService.Orders" Multiplicity="*"/>
+        <End Role="Suppliers" Type="MashupService.Suppliers" Multiplicity="0..1"/>
+        <ReferentialConstraint>
+          <Principal Role="Suppliers">
+            <PropertyRef Name="ID"/>
+          </Principal>
+          <Dependent Role="Orders">
+            <PropertyRef Name="supplier_ID"/>
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Annotations Target="MashupService.EntityContainer/Authors" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
